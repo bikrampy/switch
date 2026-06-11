@@ -95,8 +95,9 @@ def signup(request):
 def cart_view(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     items = CartItem.objects.filter(cart=cart)
-    total = sum(item.product.price * item.quantity for item in items)
-    return render(request, "shop/cart.html", {"items": items, "total": total})
+    subtotal = sum(item.product.price * item.quantity for item in items)
+    total = subtotal + 50
+    return render(request, "shop/cart.html", {"items": items, "subtotal": subtotal, "total": total})
 
 @login_required
 def add_to_cart(request, product_id):
@@ -138,7 +139,7 @@ def checkout_view(request):
     if not items.exists():
         return redirect('home_page')
     subtotal = sum(item.product.price * item.quantity for item in items)
-    total = subtotal
+    total = subtotal + 50
     if request.method == 'POST':
         fname = request.POST.get('firstname')
         lname = request.POST.get('lastname')

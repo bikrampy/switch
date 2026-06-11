@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -13,10 +14,9 @@
   
   <title>{% block title %}Switch{% endblock title %}</title>
 
-  <!-- Tailwind CSS -->
+
   <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Marcellus&display=swap" rel="stylesheet">
@@ -26,7 +26,6 @@
 
 <body class="font-sans bg-gray-50 text-gray-900 flex flex-col min-h-screen">
 
-  <!-- Toast Notifications -->
   {% if messages %}
     <div class="fixed top-6 right-6 z-50 flex flex-col gap-3">
       {% for message in messages %}
@@ -49,19 +48,17 @@
     </div>
   {% endif %}
 
-  <!-- Header Navigation -->
   <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
         <!-- Logo -->
-        <div class="flex-shrink-0 flex items-center">
+        <div class="shrink-0 flex items-center">
           <a href="{% url 'home_page' %}" class="font-serif text-3xl font-bold tracking-wider text-black">
             Switch
           </a>
         </div>
 
-        <!-- Desktop Navigation -->
         <nav class="hidden md:flex space-x-10">
           <a href="{% url 'home_page' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Home</a>
           <a href="{% url 'products' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Shop</a>
@@ -71,10 +68,8 @@
           <a href="{% url 'track_order' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Track Order</a>
         </nav>
 
-        <!-- Right Icons -->
         <div class="flex items-center space-x-6">
-          
-          <!-- Cart Icon -->
+
           <a href="{% url 'cart' %}" class="relative text-gray-700 hover:text-black transition-colors p-1" aria-label="Shopping Cart">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V6a4 4 0 0 0-8 0v5M5 9h14l1 12H4L5 9z"/>
@@ -86,7 +81,6 @@
             {% endif %}
           </a>
 
-          <!-- User Account Actions -->
           <div class="hidden sm:block relative">
             {% if user.is_authenticated %}
               <div class="flex items-center space-x-4">
@@ -114,7 +108,6 @@
             {% endif %}
           </div>
 
-          <!-- Mobile menu button -->
           <div class="flex items-center md:hidden">
             <button id="mobile-menu-button" type="button" class="text-gray-700 hover:text-black focus:outline-none p-1" aria-label="Toggle Menu">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,12 +120,10 @@
       </div>
     </div>
 
-    <!-- Mobile Navigation Menu Drawer -->
     <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
       <!-- Backdrop overlay -->
       <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" id="mobile-menu-backdrop"></div>
-      
-      <!-- Drawer Content -->
+
       <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white pt-5 pb-4 transition-transform duration-300 transform -translate-x-full" id="mobile-menu-drawer">
         <div class="absolute top-0 right-0 -mr-12 pt-2">
           <button id="mobile-menu-close" type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white text-white">
@@ -142,7 +133,7 @@
           </button>
         </div>
 
-        <div class="flex-shrink-0 flex items-center px-6">
+        <div class="shrink-0 flex items-center px-6">
           <span class="font-serif text-3xl font-bold tracking-wider text-black">Switch</span>
         </div>
         
@@ -158,7 +149,6 @@
               <a href="{% url 'order_history' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">My Orders</a>
             {% endif %}
 
-            <!-- Mobile Auth Actions -->
             <div class="pt-6 mt-6 border-t border-gray-100 flex flex-col gap-4">
               {% if user.is_authenticated %}
                 <div class="flex items-center gap-3 mb-2">
@@ -189,30 +179,27 @@
     </div>
   </header>
 
-  <!-- Page Content -->
-  <main class="flex-grow">
+  <main class="grow">
     {% block content %}{% endblock content %}
   </main>
 
-  <!-- Newsletter Section -->
+
   <section class="bg-stone-900 text-white py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto text-center">
       <h3 class="font-serif text-3xl sm:text-4xl tracking-wider uppercase mb-4">Subscribe to our newsletter</h3>
       <p class="text-stone-400 text-sm sm:text-base max-w-xl mx-auto mb-8 font-light">Join our community to receive curated style edits, early access to new releases, and exclusive member-only collections.</p>
       
       <form id="newsletter-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault(); alert('Thank you for subscribing!')">
-        <input type="email" name="email" placeholder="Your Email Address" required class="flex-grow px-5 py-3.5 bg-stone-800 border border-stone-700 rounded-lg text-sm text-white placeholder-stone-500 focus:outline-none focus:border-stone-500 transition-colors">
+        <input type="email" name="email" placeholder="Your Email Address" required class="grow px-5 py-3.5 bg-stone-800 border border-stone-700 rounded-lg text-sm text-white placeholder-stone-500 focus:outline-none focus:border-stone-500 transition-colors">
         <button type="submit" class="px-8 py-3.5 bg-white text-black font-semibold text-xs tracking-wider uppercase rounded-lg hover:bg-stone-200 transition-all">Subscribe</button>
       </form>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="bg-stone-950 text-stone-400 border-t border-stone-900 pt-16 pb-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-stone-900">
         
-        <!-- Column 1: Intro -->
         <div class="flex flex-col space-y-6">
           <a href="{% url 'home_page' %}" class="font-serif text-3xl font-bold tracking-wider text-white">
             Switch
@@ -221,7 +208,7 @@
             Redefining everyday style with high-quality, ethically made modern fashion statements. Discover the perfect look that speaks to you.
           </p>
           <div class="flex space-x-5">
-            <!-- Social Icons (Using SVG) -->
+
             <a href="#" class="hover:text-white transition-colors" aria-label="Facebook">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1V12h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
             </a>
@@ -234,7 +221,6 @@
           </div>
         </div>
 
-        <!-- Column 2: Quick Links -->
         <div>
           <h4 class="font-serif text-sm font-semibold tracking-wider text-white uppercase mb-6">Quick Links</h4>
           <ul class="space-y-4 text-sm">
@@ -244,7 +230,6 @@
           </ul>
         </div>
 
-        <!-- Column 3: Help & Info -->
         <div>
           <h4 class="font-serif text-sm font-semibold tracking-wider text-white uppercase mb-6">Help & Info</h4>
           <ul class="space-y-4 text-sm">
@@ -253,7 +238,6 @@
           </ul>
         </div>
 
-        <!-- Column 4: Contact Us -->
         <div class="text-sm">
           <h4 class="font-serif text-sm font-semibold tracking-wider text-white uppercase mb-6">Contact Us</h4>
           <p class="mb-4">Questions or suggestions?<br>
@@ -266,11 +250,8 @@
 
       </div>
 
-      <!-- Footer Bottom -->
       <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-stone-600 gap-4">
-        <p class="order-2 md:order-1">&copy; Copyright 2026 Switch. All rights reserved.</p>
-        
-        <!-- Shipping & Payment Options -->
+        <p class="order-2 md:order-1">&copy; Copyright {% now 'Y' %} Switch. All rights reserved.</p>
         <div class="flex flex-wrap items-center gap-6 order-1 md:order-2">
           <div class="flex items-center gap-2">
             <span>Shipped via DHL</span>
@@ -283,7 +264,6 @@
     </div>
   </footer>
 
-  <!-- Vanilla JS mobile navbar logic -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const menuButton = document.getElementById('mobile-menu-button');
@@ -294,7 +274,6 @@
 
       function openMenu() {
         mobileMenu.classList.remove('hidden');
-        // Trigger transition on next frame
         requestAnimationFrame(() => {
           drawer.classList.remove('-translate-x-full');
           drawer.classList.add('translate-x-0');
@@ -304,7 +283,6 @@
       function closeMenu() {
         drawer.classList.remove('translate-x-0');
         drawer.classList.add('-translate-x-full');
-        // Wait for transition to complete before hiding
         setTimeout(() => {
           mobileMenu.classList.add('hidden');
         }, 300);

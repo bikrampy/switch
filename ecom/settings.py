@@ -2,24 +2,16 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env file
 load_dotenv(BASE_DIR / '.env')
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+DEBUG = os.getenv('DEBUG')
 
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 # Application definition
 
@@ -66,10 +58,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecom.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 import dj_database_url
 
 db_url = os.getenv('DATABASE_URL')
@@ -93,10 +81,6 @@ else:
             }
         }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -114,9 +98,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -125,14 +106,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
-STATICFILES_DIRS = []
-if (BASE_DIR / 'static').exists():
-    STATICFILES_DIRS.append(BASE_DIR / 'static')
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 WHITENOISE_MANIFEST_STRICT = False
 
@@ -162,12 +137,6 @@ else:
             "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage' if os.getenv('CLOUDINARY_CLOUD_NAME') else 'django.core.files.storage.FileSystemStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

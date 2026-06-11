@@ -15,12 +15,11 @@
     </div>
   </section>
 
-  <!-- Cart Section -->
+
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     {% if items %}
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        
-        <!-- Cart Items List (Left Column) -->
+
         <div class="lg:col-span-8 space-y-6">
           <div class="hidden md:grid grid-cols-12 pb-4 border-b border-stone-200 text-xs font-semibold uppercase tracking-wider text-stone-500">
             <div class="col-span-6">Product</div>
@@ -32,8 +31,6 @@
           <div class="divide-y divide-stone-100">
             {% for item in items %}
               <div class="grid grid-cols-1 md:grid-cols-12 items-center py-6 gap-6 md:gap-0">
-                
-                <!-- Product Details -->
                 <div class="col-span-12 md:col-span-6 flex items-center gap-4">
                   <div class="w-20 h-24 bg-stone-100 rounded-lg overflow-hidden shrink-0 border border-stone-100">
                     <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
@@ -45,8 +42,6 @@
                     <p class="text-stone-500 text-xs mt-1">₹{{ item.product.price }}</p>
                   </div>
                 </div>
-
-                <!-- Quantity Form -->
                 <div class="col-span-12 md:col-span-3 flex justify-start md:justify-center items-center">
                   <form method="post" action="{% url 'update_quantity' item.id %}" class="flex items-center gap-2">
                     {% csrf_token %}
@@ -56,13 +51,9 @@
                     </button>
                   </form>
                 </div>
-
-                <!-- Subtotal -->
                 <div class="col-span-6 md:col-span-2 text-left md:text-right text-sm font-bold text-stone-950">
                   ₹{{ item.subtotal }}
                 </div>
-
-                <!-- Remove Link -->
                 <div class="col-span-6 md:col-span-1 text-right">
                   <a href="{% url 'remove_from_cart' item.id %}" class="inline-block text-stone-400 hover:text-red-600 transition-colors" aria-label="Remove Item">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,13 +61,10 @@
                     </svg>
                   </a>
                 </div>
-
               </div>
             {% endfor %}
           </div>
         </div>
-
-        <!-- Order Summary (Right Column) -->
         <div class="lg:col-span-4">
           <div class="bg-stone-50 border border-stone-100 rounded-xl p-8 sticky top-24 shadow-sm">
             <h2 class="font-serif text-lg font-semibold text-stone-950 uppercase tracking-wider mb-6 pb-3 border-b border-stone-200">
@@ -86,11 +74,11 @@
             <div class="space-y-4 mb-8 text-sm text-stone-600">
               <div class="flex justify-between">
                 <span>Subtotal</span>
-                <span class="font-semibold text-stone-900">₹{{ total }}</span>
+                <span class="font-semibold text-stone-900">₹{{ subtotal }}</span>
               </div>
               <div class="flex justify-between">
                 <span>Shipping</span>
-                <span class="text-emerald-600 font-medium">Free</span>
+                <span class="text-emerald-600 font-medium">₹50</span>
               </div>
               <div class="border-t border-stone-200 pt-4 flex justify-between text-base font-bold text-stone-950">
                 <span>Total</span>
@@ -111,7 +99,7 @@
 
       </div>
     {% else %}
-      <!-- Empty State -->
+
       <div class="text-center py-24 bg-white border border-stone-100 rounded-xl shadow-sm max-w-xl mx-auto">
         <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V6a4 4 0 0 0-8 0v5M5 9h14l1 12H4L5 9z"/>

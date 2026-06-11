@@ -3,7 +3,6 @@
 {% block title %} Switch - Curated Modern Fashion {% endblock title %}
 
 {% block content %}
-  <!-- Hero Section -->
   <section class="relative bg-stone-950 h-[80vh] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       {% if products.0.image %}
@@ -11,7 +10,7 @@
       {% else %}
         <div class="w-full h-full bg-stone-900"></div>
       {% endif %}
-      <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-linear-to-t from-stone-950 via-stone-950/40 to-transparent"></div>
     </div>
     
     <div class="relative z-10 max-w-5xl mx-auto px-4 text-center text-white" data-aos="fade-up">
@@ -30,7 +29,7 @@
     </div>
   </section>
 
-  <!-- Features Banner -->
+
   <section class="bg-white border-y border-stone-100 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-stone-100">
@@ -71,20 +70,19 @@
     </div>
   </section>
 
-  <!-- Categories Section -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
     <div class="text-center mb-12">
       <h2 class="font-serif text-3xl sm:text-4xl tracking-wide uppercase text-stone-950">Shop by Category</h2>
-      <div class="w-12 h-[2px] bg-black mx-auto mt-4"></div>
+      <div class="w-12 h-0.5 bg-black mx-auto mt-4"></div>
     </div>
     
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for category in categories %}
-        <div class="group relative overflow-hidden rounded-xl bg-stone-100 aspect-[4/5] shadow-sm hover:shadow-md transition-shadow">
+        <div class="group relative overflow-hidden rounded-xl bg-stone-100 aspect-4/5 shadow-sm hover:shadow-md transition-shadow">
           {% if category.image %}
             <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out">
           {% endif %}
-          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/20 to-transparent"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-stone-950/80 via-stone-950/20 to-transparent"></div>
           <div class="absolute inset-0 flex flex-col justify-end p-8 text-white">
             <h3 class="font-serif text-2xl uppercase tracking-wider mb-3">{{ category.name }}</h3>
             <a href="{% url 'products' %}?category={{ category.id }}" class="text-xs font-semibold tracking-widest uppercase text-stone-300 hover:text-white transition-colors flex items-center gap-1.5">
@@ -99,7 +97,6 @@
     </div>
   </section>
 
-  <!-- New Arrivals Grid -->
   <section class="bg-stone-50 py-20 border-t border-stone-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between mb-12">
@@ -115,12 +112,11 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {% for product in products %}
           <div class="group flex flex-col bg-white rounded-xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-md transition-all">
-            <div class="relative overflow-hidden aspect-[3/4] bg-stone-100 shrink-0">
+            <div class="relative overflow-hidden aspect-3/4 bg-stone-100 shrink-0">
               <a href="{% url 'product_detail' product.id %}" class="block w-full h-full">
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out">
               </a>
               
-              <!-- Quick Add Action Button (POST) -->
               <div class="absolute bottom-4 left-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                 <form action="{% url 'add_to_cart' product.id %}" method="post">
                   {% csrf_token %}
@@ -135,7 +131,7 @@
               </div>
             </div>
 
-            <div class="p-6 flex flex-col flex-grow">
+            <div class="p-6 flex flex-col grow">
               <span class="text-[10px] font-bold tracking-widest uppercase text-stone-400 mb-1 font-mono">{{ product.category.name }}</span>
               <h3 class="font-serif text-lg text-stone-900 uppercase tracking-wide mb-2 hover:text-stone-700">
                 <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
