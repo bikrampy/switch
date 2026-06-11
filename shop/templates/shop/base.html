@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="author" content="Switch">
+  <meta name="keywords" content="ecommerce,fashion,store">
+  <meta name="description" content="Switch - eCommerce Store">
+  
+  <title>{% block title %}Switch{% endblock title %}</title>
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Marcellus&display=swap" rel="stylesheet">
+
+  {% block stylesheets %}{% endblock stylesheets %}
+</head>
+
+<body class="font-sans bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- Toast Notifications -->
+  {% if messages %}
+    <div class="fixed top-6 right-6 z-50 flex flex-col gap-3">
+      {% for message in messages %}
+        <div class="flex items-center justify-between gap-4 bg-white border border-gray-100 shadow-2xl rounded-xl px-5 py-4 text-sm text-gray-700 min-w-80 border-l-4 {% if message.tags == 'error' %}border-l-red-500{% elif message.tags == 'success' %}border-l-emerald-500{% else %}border-l-indigo-500{% endif %} transition-all transform duration-300" role="alert">
+          <div class="flex items-center gap-3">
+            {% if message.tags == 'error' %}
+              <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            {% elif message.tags == 'success' %}
+              <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {% else %}
+              <svg class="w-5 h-5 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {% endif %}
+            <span class="font-medium">{{ message }}</span>
+          </div>
+          <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <a href="{% url 'home_page' %}" class="font-serif text-3xl font-bold tracking-wider text-black">
+            Switch
+          </a>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex space-x-10">
+          <a href="{% url 'home_page' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Home</a>
+          <a href="{% url 'products' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Shop</a>
+          <a href="{% url 'about' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">About</a>
+          <a href="{% url 'contact' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Contact</a>
+          <a href="{% url 'faqs' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">FAQs</a>
+          <a href="{% url 'track_order' %}" class="text-sm font-medium text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Track Order</a>
+        </nav>
+
+        <!-- Right Icons -->
+        <div class="flex items-center space-x-6">
+          
+          <!-- Cart Icon -->
+          <a href="{% url 'cart' %}" class="relative text-gray-700 hover:text-black transition-colors p-1" aria-label="Shopping Cart">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V6a4 4 0 0 0-8 0v5M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            {% if user.is_authenticated and user.cart and user.cart.cartitem_set.count > 0 %}
+              <span class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white ring-2 ring-white">
+                {{ user.cart.cartitem_set.count }}
+              </span>
+            {% endif %}
+          </a>
+
+          <!-- User Account Actions -->
+          <div class="hidden sm:block relative">
+            {% if user.is_authenticated %}
+              <div class="flex items-center space-x-4">
+                <a href="{% url 'profile' %}" class="flex items-center gap-2 group">
+                  {% if user.userprofile.profile_picture %}
+                    <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile" class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                  {% else %}
+                    <div class="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold uppercase">
+                      {{ user.username|slice:":1" }}
+                    </div>
+                  {% endif %}
+                  <span class="text-xs font-semibold text-gray-700 group-hover:text-black transition-colors">{{ user.username }}</span>
+                </a>
+                <a href="{% url 'order_history' %}" class="text-xs font-semibold text-gray-700 hover:text-black transition-colors uppercase tracking-wider">My Orders</a>
+                <form action="{% url 'logout' %}" method="post" class="inline">
+                  {% csrf_token %}
+                  <button type="submit" class="text-xs font-medium text-red-600 hover:text-red-800 transition-colors uppercase tracking-wider">Logout</button>
+                </form>
+              </div>
+            {% else %}
+              <div class="flex items-center space-x-4">
+                <a href="{% url 'login' %}" class="text-xs font-semibold text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Login</a>
+                <a href="{% url 'signup' %}" class="text-xs font-semibold bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all uppercase tracking-wider">Sign Up</a>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="flex items-center md:hidden">
+            <button id="mobile-menu-button" type="button" class="text-gray-700 hover:text-black focus:outline-none p-1" aria-label="Toggle Menu">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
+      <!-- Backdrop overlay -->
+      <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" id="mobile-menu-backdrop"></div>
+      
+      <!-- Drawer Content -->
+      <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white pt-5 pb-4 transition-transform duration-300 transform -translate-x-full" id="mobile-menu-drawer">
+        <div class="absolute top-0 right-0 -mr-12 pt-2">
+          <button id="mobile-menu-close" type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white text-white">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex-shrink-0 flex items-center px-6">
+          <span class="font-serif text-3xl font-bold tracking-wider text-black">Switch</span>
+        </div>
+        
+        <div class="mt-8 flex-1 h-0 overflow-y-auto px-6">
+          <nav class="flex flex-col space-y-6">
+            <a href="{% url 'home_page' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">Home</a>
+            <a href="{% url 'products' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">Shop</a>
+            <a href="{% url 'about' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">About Us</a>
+            <a href="{% url 'contact' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">Contact</a>
+            <a href="{% url 'faqs' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">FAQs</a>
+            <a href="{% url 'track_order' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">Track Order</a>
+            {% if user.is_authenticated %}
+              <a href="{% url 'order_history' %}" class="text-lg font-medium text-gray-800 hover:text-black border-b border-gray-100 pb-2">My Orders</a>
+            {% endif %}
+
+            <!-- Mobile Auth Actions -->
+            <div class="pt-6 mt-6 border-t border-gray-100 flex flex-col gap-4">
+              {% if user.is_authenticated %}
+                <div class="flex items-center gap-3 mb-2">
+                  {% if user.userprofile.profile_picture %}
+                    <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                  {% else %}
+                    <div class="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold uppercase">
+                      {{ user.username|slice:":1" }}
+                    </div>
+                  {% endif %}
+                  <div class="flex flex-col">
+                    <span class="font-bold text-gray-800">{{ user.username }}</span>
+                    <a href="{% url 'profile' %}" class="text-xs text-indigo-600 hover:underline">View Profile</a>
+                  </div>
+                </div>
+                <form action="{% url 'logout' %}" method="post" class="w-full">
+                  {% csrf_token %}
+                  <button type="submit" class="w-full py-2.5 text-center bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg text-gray-700 transition-colors uppercase tracking-wider">Logout</button>
+                </form>
+              {% else %}
+                <a href="{% url 'login' %}" class="w-full py-2.5 text-center border border-gray-300 hover:border-black text-sm font-semibold rounded-lg text-gray-700 hover:text-black transition-colors uppercase tracking-wider">Login</a>
+                <a href="{% url 'signup' %}" class="w-full py-2.5 text-center bg-black hover:bg-gray-800 text-sm font-semibold rounded-lg text-white transition-colors uppercase tracking-wider">Sign Up</a>
+              {% endif %}
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="flex-grow">
+    {% block content %}{% endblock content %}
+  </main>
+
+  <!-- Newsletter Section -->
+  <section class="bg-stone-900 text-white py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <h3 class="font-serif text-3xl sm:text-4xl tracking-wider uppercase mb-4">Subscribe to our newsletter</h3>
+      <p class="text-stone-400 text-sm sm:text-base max-w-xl mx-auto mb-8 font-light">Join our community to receive curated style edits, early access to new releases, and exclusive member-only collections.</p>
+      
+      <form id="newsletter-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault(); alert('Thank you for subscribing!')">
+        <input type="email" name="email" placeholder="Your Email Address" required class="flex-grow px-5 py-3.5 bg-stone-800 border border-stone-700 rounded-lg text-sm text-white placeholder-stone-500 focus:outline-none focus:border-stone-500 transition-colors">
+        <button type="submit" class="px-8 py-3.5 bg-white text-black font-semibold text-xs tracking-wider uppercase rounded-lg hover:bg-stone-200 transition-all">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-stone-950 text-stone-400 border-t border-stone-900 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-stone-900">
+        
+        <!-- Column 1: Intro -->
+        <div class="flex flex-col space-y-6">
+          <a href="{% url 'home_page' %}" class="font-serif text-3xl font-bold tracking-wider text-white">
+            Switch
+          </a>
+          <p class="text-sm text-stone-500 font-light leading-relaxed">
+            Redefining everyday style with high-quality, ethically made modern fashion statements. Discover the perfect look that speaks to you.
+          </p>
+          <div class="flex space-x-5">
+            <!-- Social Icons (Using SVG) -->
+            <a href="#" class="hover:text-white transition-colors" aria-label="Facebook">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1V12h3v3h-3v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
+            </a>
+            <a href="#" class="hover:text-white transition-colors" aria-label="Twitter">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 01-2.82.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            </a>
+            <a href="#" class="hover:text-white transition-colors" aria-label="Instagram">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div>
+          <h4 class="font-serif text-sm font-semibold tracking-wider text-white uppercase mb-6">Quick Links</h4>
+          <ul class="space-y-4 text-sm">
+            <li><a href="{% url 'home_page' %}" class="hover:text-white transition-colors">Home</a></li>
+            <li><a href="{% url 'products' %}" class="hover:text-white transition-colors">All Products</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-white transition-colors">About Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Help & Info -->
+        <div>
+          <h4 class="font-serif text-sm font-semibold tracking-wider text-white uppercase mb-6">Help & Info</h4>
+          <ul class="space-y-4 text-sm">
+            <li><a href="{% url 'contact' %}" class="hover:text-white transition-colors">Contact Support</a></li>
+            <li><a href="{% url 'faqs' %}" class="hover:text-white transition-colors">FAQs & Help</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Contact Us -->
+        <div class="text-sm">
+          <h4 class="font-serif text-sm font-semibold tracking-wider text-white uppercase mb-6">Contact Us</h4>
+          <p class="mb-4">Questions or suggestions?<br>
+            <a href="mailto:bikramsahanolimit@gmail.com" class="text-white hover:underline">bikramsahanolimit@gmail.com</a>
+          </p>
+          <p>Need support? Call us:<br>
+            <a href="tel:+919531537510" class="text-white hover:underline">+91 95315 37510</a>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-stone-600 gap-4">
+        <p class="order-2 md:order-1">&copy; Copyright 2026 Switch. All rights reserved.</p>
+        
+        <!-- Shipping & Payment Options -->
+        <div class="flex flex-wrap items-center gap-6 order-1 md:order-2">
+          <div class="flex items-center gap-2">
+            <span>Shipped via DHL</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span>Payment: Visa / PayPal / MasterCard</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Vanilla JS mobile navbar logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuButton = document.getElementById('mobile-menu-button');
+      const closeButton = document.getElementById('mobile-menu-close');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const backdrop = document.getElementById('mobile-menu-backdrop');
+      const drawer = document.getElementById('mobile-menu-drawer');
+
+      function openMenu() {
+        mobileMenu.classList.remove('hidden');
+        // Trigger transition on next frame
+        requestAnimationFrame(() => {
+          drawer.classList.remove('-translate-x-full');
+          drawer.classList.add('translate-x-0');
+        });
+      }
+
+      function closeMenu() {
+        drawer.classList.remove('translate-x-0');
+        drawer.classList.add('-translate-x-full');
+        // Wait for transition to complete before hiding
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+        }, 300);
+      }
+
+      if (menuButton && closeButton && mobileMenu && backdrop) {
+        menuButton.addEventListener('click', openMenu);
+        closeButton.addEventListener('click', closeMenu);
+        backdrop.addEventListener('click', closeMenu);
+      }
+    });
+  </script>
+
+</body>
+</html>

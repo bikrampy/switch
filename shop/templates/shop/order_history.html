@@ -1,0 +1,90 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %} Order History - Switch {% endblock title %}
+
+{% block content %}
+  <!-- Header Banner -->
+  <section class="bg-stone-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-serif text-3xl uppercase tracking-wider mb-2">Order History</h1>
+      <nav class="flex justify-center items-center gap-2 text-stone-400 text-xs uppercase tracking-wider">
+        <a href="{% url 'home_page' %}" class="hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-white">Orders</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Orders Content -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    {% if orders %}
+      <div class="bg-white border border-stone-100 shadow-sm rounded-2xl overflow-hidden p-6 md:p-8">
+        <div class="hidden md:grid grid-cols-12 pb-4 border-b border-stone-200 text-xs font-semibold uppercase tracking-wider text-stone-500">
+          <div class="col-span-2">Order ID</div>
+          <div class="col-span-3">Date Placed</div>
+          <div class="col-span-3 text-center">Status</div>
+          <div class="col-span-2 text-right">Total Price</div>
+          <div class="col-span-2"></div>
+        </div>
+
+        <div class="divide-y divide-stone-100">
+          {% for order in orders %}
+            <div class="grid grid-cols-1 md:grid-cols-12 items-center py-6 gap-4 md:gap-0">
+              
+              <!-- Order ID -->
+              <div class="col-span-12 md:col-span-2 flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-stone-400 md:hidden">Order ID:</span>
+                <span class="font-mono text-sm font-semibold text-stone-900">#SW-{{ order.id }}</span>
+              </div>
+
+              <!-- Date Placed -->
+              <div class="col-span-12 md:col-span-3 flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-stone-400 md:hidden">Date:</span>
+                <span class="text-sm text-stone-600 font-light">{{ order.order_date|date:"F d, Y" }}</span>
+              </div>
+
+              <!-- Status Badge -->
+              <div class="col-span-12 md:col-span-3 flex justify-start md:justify-center items-center gap-2">
+                <span class="text-xs font-mono font-bold text-stone-400 md:hidden">Status:</span>
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider
+                  {% if order.status == 'Delivered' %}bg-emerald-50 text-emerald-700 border border-emerald-100
+                  {% elif order.status == 'Shipped' %}bg-indigo-50 text-indigo-700 border border-indigo-100
+                  {% elif order.status == 'Processing' %}bg-amber-50 text-amber-700 border border-amber-100
+                  {% elif order.status == 'Cancelled' %}bg-red-50 text-red-700 border border-red-100
+                  {% else %}bg-stone-50 text-stone-600 border border-stone-150{% endif %}">
+                  {{ order.status }}
+                </span>
+              </div>
+
+              <!-- Total Price -->
+              <div class="col-span-12 md:col-span-2 flex items-center md:justify-end gap-2">
+                <span class="text-xs font-mono font-bold text-stone-400 md:hidden">Total:</span>
+                <span class="text-sm font-bold text-stone-950">₹{{ order.total_price }}</span>
+              </div>
+
+              <!-- Action Link -->
+              <div class="col-span-12 md:col-span-2 text-right">
+                <a href="{% url 'track_order_detail' order.id %}" class="inline-block w-full md:w-auto text-center px-4 py-2 bg-stone-100 hover:bg-stone-900 hover:text-white text-xs font-semibold uppercase tracking-wider rounded-lg text-stone-800 transition-all">
+                  Track Details
+                </a>
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <!-- Empty State -->
+      <div class="text-center py-24 bg-white border border-stone-100 rounded-xl shadow-sm max-w-xl mx-auto">
+        <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+        </svg>
+        <h2 class="font-serif text-xl text-stone-950 uppercase tracking-wider mb-2">No Orders Yet</h2>
+        <p class="text-stone-500 text-sm font-light mb-8 max-w-xs mx-auto">You haven't placed any orders with us yet. Visit the shop to make your first purchase!</p>
+        <a href="{% url 'products' %}" class="inline-block px-8 py-3.5 bg-black hover:bg-stone-900 text-white text-xs font-bold tracking-widest uppercase rounded-lg shadow-md hover:shadow-lg transition-all">
+          Shop Our Collection
+        </a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock content %}

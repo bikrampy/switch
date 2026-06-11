@@ -1,0 +1,149 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %} Checkout - Switch {% endblock title %}
+
+{% block content %}
+  <!-- Header Banner -->
+  <section class="bg-stone-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-serif text-3xl uppercase tracking-wider mb-2">Checkout</h1>
+      <nav class="flex justify-center items-center gap-2 text-stone-400 text-xs uppercase tracking-wider">
+        <a href="{% url 'home_page' %}" class="hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <a href="{% url 'cart' %}" class="hover:text-white transition-colors">Cart</a>
+        <span>/</span>
+        <span class="text-white">Checkout</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Checkout Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <form method="post" class="space-y-12">
+      {% csrf_token %}
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        
+        <!-- Billing Details (Left Column) -->
+        <div class="lg:col-span-7 space-y-8">
+          <h2 class="font-serif text-2xl text-stone-900 uppercase tracking-wide border-b border-stone-100 pb-4">
+            Billing Details
+          </h2>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label for="fname" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">First Name *</label>
+              <input type="text" id="fname" name="firstname" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+            <div>
+              <label for="lname" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Last Name *</label>
+              <input type="text" id="lname" name="lastname" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="adr" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Street Address *</label>
+              <input type="text" id="adr" name="address" placeholder="House number and street name" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors mb-3">
+              <input type="text" id="adr2" name="address2" placeholder="Apartment, suite, unit, etc. (optional)" class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label for="city" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Town / City *</label>
+              <input type="text" id="city" name="city" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+            <div>
+              <label for="zip" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Zip Code *</label>
+              <input type="text" id="zip" name="zip" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label for="phone" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Phone *</label>
+              <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+            <div>
+              <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Email address *</label>
+              <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors">
+            </div>
+          </div>
+
+          <div>
+            <label for="notes" class="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-2">Order notes (optional)</label>
+            <textarea id="notes" name="notes" rows="4" placeholder="Notes about your order, e.g. special notes for delivery." class="w-full px-4 py-3 bg-white border border-stone-200 rounded-lg text-sm text-stone-900 focus:outline-none focus:border-black transition-colors resize-none"></textarea>
+          </div>
+
+        </div>
+
+        <!-- Order Summary & Payment (Right Column) -->
+        <div class="lg:col-span-5">
+          <div class="bg-stone-50 border border-stone-100 rounded-xl p-8 sticky top-24 shadow-sm space-y-8">
+            <h2 class="font-serif text-xl text-stone-950 uppercase tracking-wider border-b border-stone-200 pb-4">
+              Your Order
+            </h2>
+            
+            <!-- Items Breakdowns -->
+            <div class="max-h-48 overflow-y-auto space-y-4 pr-2 divide-y divide-stone-100">
+              {% for item in items %}
+                <div class="flex justify-between items-center text-sm pt-3 {% if forloop.first %}pt-0 border-0{% endif %}">
+                  <span class="font-light text-stone-600">
+                    {{ item.product.name }} <strong class="text-stone-900 font-medium">x {{ item.quantity }}</strong>
+                  </span>
+                  <span class="font-semibold text-stone-900">₹{{ item.subtotal }}</span>
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Totals -->
+            <div class="border-t border-stone-200 pt-6 space-y-3 text-sm text-stone-600">
+              <div class="flex justify-between">
+                <span>Subtotal</span>
+                <span class="font-semibold text-stone-900">₹{{ subtotal }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Shipping</span>
+                <span class="text-emerald-600 font-medium">Free</span>
+              </div>
+              <div class="border-t border-stone-200 pt-4 flex justify-between text-base font-bold text-stone-950">
+                <span>Total</span>
+                <span>₹{{ total }}</span>
+              </div>
+            </div>
+
+            <!-- Payment Options -->
+            <div class="border-t border-stone-200 pt-6 space-y-4">
+              <h3 class="text-xs font-semibold text-stone-800 uppercase tracking-widest">Payment Method</h3>
+              
+              <div class="space-y-3">
+                <label class="flex items-start gap-3 p-4 bg-white border border-stone-100 rounded-lg cursor-pointer hover:border-stone-300 transition-colors">
+                  <input type="radio" name="payment_method" value="bank_transfer" checked class="mt-1 text-black focus:ring-black">
+                  <div>
+                    <span class="block text-sm font-semibold text-stone-900 uppercase tracking-wider">Direct Bank Transfer</span>
+                    <span class="block text-xs text-stone-500 font-light mt-1">Make your payment directly into our bank account. Your order will be shipped after funds clear.</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-4 bg-white border border-stone-100 rounded-lg cursor-pointer hover:border-stone-300 transition-colors">
+                  <input type="radio" name="payment_method" value="cod" class="mt-1 text-black focus:ring-black">
+                  <div>
+                    <span class="block text-sm font-semibold text-stone-900 uppercase tracking-wider">Cash On Delivery</span>
+                    <span class="block text-xs text-stone-500 font-light mt-1">Pay with cash upon delivery.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full py-4 bg-black hover:bg-stone-900 text-white font-bold text-xs tracking-widest uppercase rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+              Place Order
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </section>
+{% endblock content %}
